@@ -1,0 +1,42 @@
+{
+    "dev": {
+      "driver": "pg",
+     "host":"localhost",
+     "database":"store_dev",
+     "user":"mohammedjr",
+     "password":"jr1213"
+    },
+  
+    "test": {
+      "driver": "pg",
+      "host":"localhost",
+      "database":"store_test",
+      "user":"mohammedjr",
+      "password":"jr1213"
+    },
+  
+    "prod": {
+      "driver": "postgras",
+      "user": "root",
+      "password": "root"
+    },
+  
+    "pg": {
+      "driver": "pg",
+      "user": "postgres",
+      "password": "",
+      "host": "localhost",
+      "database": "mydb",
+      "port": "20144",
+      "ssl": "true",
+      "schema": "my_schema"
+    },
+  
+    "mongo": {
+      "driver": "mongodb",
+      "database": "my_db",
+      "host": "localhost"
+    },
+  
+    "other": "postgres://uname:pw@server.com/dbname"
+  }
