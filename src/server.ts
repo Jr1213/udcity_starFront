@@ -1,6 +1,7 @@
 import express, { Request, Response } from 'express'
 import bodyParser from 'body-parser'
 import userRouter from './api/userRoutes'
+import productRouter from './api/productRoute'
 
 
 const app: express.Application = express()
@@ -15,7 +16,7 @@ app.get('/',async function (req: Request, res: Response) {
 })
 
 app.use('/',userRouter)
-
+app.use('/',productRouter)
 
 app.listen(3000, function () {
     console.log(`starting app on: ${address}`)

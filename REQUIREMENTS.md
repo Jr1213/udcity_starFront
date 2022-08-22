@@ -5,16 +5,16 @@ These are the notes from a meeting with the frontend developer that describe wha
 
 ## API Endpoints
 #### Products
-- Index 
-- Show
-- Create [token required]
+- Index  done
+- Show   done
+- Create [token required] done
 - [OPTIONAL] Top 5 most popular products 
 - [OPTIONAL] Products by category (args: product category)
 
 #### Users
-- Index [token required]
-- Show [token required]
-- Create N[token required]
+- Index [token required] done
+- Show [token required] done
+- Create N[token required] done
 
 #### Orders
 - Current Order by user (args: user id)[token required]

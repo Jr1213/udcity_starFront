@@ -78,17 +78,16 @@ var userStore = /** @class */ (function () {
                 switch (_a.label) {
                     case 0:
                         _a.trys.push([0, 3, , 4]);
-                        query = "INSERT INTO users (firstname, lastname, password) VALUES ($1, $2, $3);";
+                        query = "INSERT INTO users (firstname, lastname, password, email) VALUES ($1, $2, $3,$4);";
                         return [4 /*yield*/, database_1["default"].connect()];
                     case 1:
                         conn = _a.sent();
                         pepper = process.env.BCRYPT_PASSWORD;
                         soldRound = process.env.SALT_ROUNDS;
                         hashed = bcrypt_1["default"].hashSync(info.password + pepper, parseInt(soldRound));
-                        return [4 /*yield*/, conn.query(query, [info.firstName, info.lastName, hashed])];
+                        return [4 /*yield*/, conn.query(query, [info.firstName, info.lastName, hashed, info.email])];
                     case 2:
                         res = _a.sent();
-                        console.log(res.rows);
                         conn.release();
                         return [2 /*return*/, ["new user has been added", true]];
                     case 3:
@@ -110,7 +109,7 @@ var userStore = /** @class */ (function () {
                         return [4 /*yield*/, database_1["default"].connect()];
                     case 1:
                         conn = _a.sent();
-                        qurey = 'SELECT * FROM users WHERE id = $1';
+                        qurey = 'SELECT * FROM users WHERE id = $1;';
                         return [4 /*yield*/, conn.query(qurey, [id])];
                     case 2:
                         result = _a.sent();
@@ -118,6 +117,43 @@ var userStore = /** @class */ (function () {
                     case 3:
                         error_1 = _a.sent();
                         throw new Error("unexpected error happend : ".concat(error_1));
+                    case 4: return [2 /*return*/];
+                }
+            });
+        });
+    };
+    //login with user
+    userStore.prototype.login = function (email, password) {
+        return __awaiter(this, void 0, void 0, function () {
+            var conn, query, result, data, pepper, check, error_2;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        _a.trys.push([0, 3, , 4]);
+                        return [4 /*yield*/, database_1["default"].connect()];
+                    case 1:
+                        conn = _a.sent();
+                        query = 'SELECT * FROM users WHERE email = $1';
+                        return [4 /*yield*/, conn.query(query, [email])];
+                    case 2:
+                        result = _a.sent();
+                        console.log(result);
+                        data = [false, 'invlaild email or password'];
+                        pepper = process.env.BCRYPT_PASSWORD;
+                        check = bcrypt_1["default"].compareSync(password + pepper, result.rows[0].password);
+                        if (result.rowCount == 0) {
+                            data = [false, 'invlaild email or password'];
+                        }
+                        if (check == true) {
+                            data = [check, result.rows[0]];
+                        }
+                        else {
+                            [check, 'invlaild email or password'];
+                        }
+                        return [2 /*return*/, data];
+                    case 3:
+                        error_2 = _a.sent();
+                        return [2 /*return*/, [false, 'invlaild email or password']];
                     case 4: return [2 /*return*/];
                 }
             });

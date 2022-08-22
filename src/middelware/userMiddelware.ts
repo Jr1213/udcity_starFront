@@ -2,14 +2,16 @@ import { Request, Response} from "express";
 interface userCreateErrors {
     firstName:string | null,
     lastName:string | null,
-    password:string | null
+    password:string | null,
+    email:string | null
 }
 const createUserVaildate = (req:Request,res:Response,next:Function):void => {
     //first name exist
     let errors:userCreateErrors = {
         firstName :null,
         lastName : null,
-        password : null
+        password : null,
+        email:null
     }
 
     if(!req.body.hasOwnProperty('firstName') || req.body.firstName.length == 0){
@@ -26,7 +28,10 @@ const createUserVaildate = (req:Request,res:Response,next:Function):void => {
         errors.password = 'invaild password'
     }
 
-    if(errors.firstName != null || errors.lastName != null || errors.password != null){
+    if(!req.body.hasOwnProperty('email') || req.body.email.length == 0){
+        errors.email = 'invaild email'
+    }
+    if(errors.firstName != null || errors.lastName != null || errors.password != null || errors.email != null){
         
         res.status(401)
         res.json(errors)

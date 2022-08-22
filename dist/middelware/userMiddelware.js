@@ -5,7 +5,8 @@ var createUserVaildate = function (req, res, next) {
     var errors = {
         firstName: null,
         lastName: null,
-        password: null
+        password: null,
+        email: null
     };
     if (!req.body.hasOwnProperty('firstName') || req.body.firstName.length == 0) {
         errors.firstName = 'invaild user first name';
@@ -18,7 +19,10 @@ var createUserVaildate = function (req, res, next) {
     if (!req.body.hasOwnProperty('password') || req.body.password.length == 0) {
         errors.password = 'invaild password';
     }
-    if (errors.firstName != null || errors.lastName != null || errors.password != null) {
+    if (!req.body.hasOwnProperty('email') || req.body.email.length == 0) {
+        errors.email = 'invaild email';
+    }
+    if (errors.firstName != null || errors.lastName != null || errors.password != null || errors.email != null) {
         res.status(401);
         res.json(errors);
         res.end();

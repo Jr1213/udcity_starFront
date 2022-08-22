@@ -40,61 +40,17 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 exports.__esModule = true;
 var express_1 = require("express");
-var user_1 = require("../models/user");
-var userMiddelware_1 = __importDefault(require("../middelware/userMiddelware"));
-var jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 var jwtMiddelware_1 = __importDefault(require("../middelware/jwtMiddelware"));
-var loginMiddelWare_1 = __importDefault(require("../middelware/loginMiddelWare"));
-var userRouter = (0, express_1.Router)();
-//get users
-userRouter.get("/users", jwtMiddelware_1["default"], function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
-    var userModel, reslt;
+var productMiddelWare_1 = __importDefault(require("../middelware/productMiddelWare"));
+var product_1 = require("../models/product");
+var productRouter = (0, express_1.Router)();
+var productModel = new product_1.ProductStore();
+//get all products 
+productRouter.get("/products", function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
+    var result;
     return __generator(this, function (_a) {
         switch (_a.label) {
-            case 0:
-                userModel = new user_1.userStore();
-                return [4 /*yield*/, userModel.index()];
-            case 1:
-                reslt = _a.sent();
-                res.json(reslt);
-                res.end();
-                return [2 /*return*/];
-        }
-    });
-}); });
-//create user
-userRouter.post("/user", [userMiddelware_1["default"]], function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
-    var userModel, result, secret, jwt;
-    return __generator(this, function (_a) {
-        switch (_a.label) {
-            case 0:
-                userModel = new user_1.userStore();
-                return [4 /*yield*/, userModel.create({
-                        firstName: req.body.firstName,
-                        lastName: req.body.lastName,
-                        password: req.body.password,
-                        email: req.body.email
-                    })
-                    //return response
-                ];
-            case 1:
-                result = _a.sent();
-                secret = process.env.TOKEN_SECRET;
-                jwt = jsonwebtoken_1["default"].sign({ user: result[0] }, secret);
-                res.json(jwt);
-                res.end();
-                return [2 /*return*/];
-        }
-    });
-}); });
-userRouter.get("/user/:id", jwtMiddelware_1["default"], function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
-    var userModel, id, result;
-    return __generator(this, function (_a) {
-        switch (_a.label) {
-            case 0:
-                userModel = new user_1.userStore();
-                id = parseInt(req.params.id);
-                return [4 /*yield*/, userModel.show(id)];
+            case 0: return [4 /*yield*/, productModel.index()];
             case 1:
                 result = _a.sent();
                 res.json(result);
@@ -103,34 +59,40 @@ userRouter.get("/user/:id", jwtMiddelware_1["default"], function (req, res) { re
         }
     });
 }); });
-//login
-userRouter.post("/login", loginMiddelWare_1["default"], function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
-    var userModel, email, password, result, secret, jwt;
+//create product
+productRouter.post("/product", [jwtMiddelware_1["default"], productMiddelWare_1["default"]], function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
+    var data, result;
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0:
-                userModel = new user_1.userStore();
-                email = req.body.email;
-                password = req.body.password;
-                return [4 /*yield*/, userModel.login(email, password)];
+                data = {
+                    name: req.body.name,
+                    price: req.body.price
+                };
+                return [4 /*yield*/, productModel.create(data)];
             case 1:
                 result = _a.sent();
-                if (result[0] == true) {
-                    secret = process.env.TOKEN_SECRET;
-                    console.log(result[1]);
-                    jwt = jsonwebtoken_1["default"].sign({ user: result[1] }, secret);
-                    res.json(jwt);
-                    res.end();
-                }
-                else {
-                    res.status(401);
-                    res.json({
-                        error: result[1]
-                    });
-                    res.end();
-                }
+                console.log(result);
+                res.json({ status: 'product has been created' });
+                res.end();
                 return [2 /*return*/];
         }
     });
 }); });
-exports["default"] = userRouter;
+//show product by id
+productRouter.get("/product/:id", function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
+    var id, result;
+    return __generator(this, function (_a) {
+        switch (_a.label) {
+            case 0:
+                id = parseInt(req.params.id);
+                return [4 /*yield*/, productModel.show(id)];
+            case 1:
+                result = _a.sent();
+                res.json(result);
+                res.end();
+                return [2 /*return*/];
+        }
+    });
+}); });
+exports["default"] = productRouter;
